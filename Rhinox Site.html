@@ -1,0 +1,275 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rhinox Studios</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        header {
+            background-color: #333333;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+        }
+
+        header nav a {
+            color: white;
+            margin: 0 15px;
+            text-decoration: none;
+        }
+
+        section {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(400px, 1fr));
+            background-color: #000000;
+            gap: 15px;
+        }
+
+        .portfolio-item {
+            cursor: pointer;
+            background-color: #ffffff;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+        }
+
+        .portfolio-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+            object-fit: cover;
+            border-radius: 6px;
+            aspect-ratio: 4 / 3; /* Ensures the images have the same aspect ratio */
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 10;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.9);
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .modal-content {
+            background-color: rgb(0, 0, 0);
+            margin: auto;
+            padding: 20px;
+            border: 10px solid #ffffff00;
+            width: 80%;
+            max-width: 800px; /* Adjusted max-width for larger screens */
+            color: white;
+            position: relative;
+        }
+
+        .close, .prev, .next {
+            color: #ffffff48;
+            position: absolute;
+            top: 10px;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close {
+            right: 15px;
+        }
+
+        .prev {
+            left: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .next {
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .close:hover, .close:focus,
+        .prev:hover, .prev:focus,
+        .next:hover, .next:focus {
+            color: black;
+        }
+
+        #contact ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        #contact li {
+            margin: 5px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#projects">Projects in Progress</a>
+            <a href="#contact">Contact</a>
+        </nav>
+    </header>
+    
+    <section id="portfolio">
+        <h2>Portfolio</h2>
+        <div class="portfolio-grid">
+            <div class="portfolio-item" onclick="openModal(1)">
+                <img src="RhinoxSite/Pitbull.png" alt="Pitbull">
+                <p>Pitmonster</p>
+            </div>
+            <div class="portfolio-item" onclick="openModal(2)">
+                <img src="RhinoxSite/Bust_Hades_Color.png" alt="Hades">
+                <p>Hades Bust</p>
+            </div>
+            <div class="portfolio-item" onclick="openModal(3)">
+                <img src="RhinoxSite/One_Bust_Saci.png" alt="Saci">
+                <p>Saci Bust</p>
+            </div>
+            <div class="portfolio-item" onclick="openModal(4)">
+                <img src="https://cdn.discordapp.com/attachments/473896486153879563/1273683453660889108/Stylized_3d_Character.png?ex=66bf81a7&is=66be3027&hm=f9073c09cc7243a6fcfa862f848b63ead3425478181c75213db4ba2052c76650&" alt="Character">
+                <p>Stylized Character</p>
+            </div>
+            <div class="portfolio-item" onclick="openModal(5)">
+                <img src="RhinoxSite/Vr_Avatar.png" alt="Project 5 Photo 1">
+                <p>VrChat Girl</p>
+            </div>
+            <div class="portfolio-item" onclick="openModal(6)">
+                <img src="RhinoxSite/Vr_Avatar_2.png" alt="Project 6 Photo 1">
+                <p>VrChat Girl 2</p>
+            </div>
+        </div>
+
+        <div id="myModal" class="modal">
+            <div class="modal-content">
+                <span class="close" onclick="closeModal()">&times;</span>
+                <span class="prev" onclick="changePhoto(-1)">&#10094;</span>
+                <span class="next" onclick="changePhoto(1)">&#10095;</span>
+                <img id="modal-img" src="" alt="Portfolio Image" style="width: 100%;">
+                <p id="modal-desc"></p>
+            </div>
+        </div>
+    </section>
+
+    <section id="projects">
+        <h2>Projects in Progress</h2>
+        <p>Details about projects currently being worked on by Rhinox Studios.</p>
+    </section>
+
+    <section id="contact">
+        <h2>Contact</h2>
+        <p>If you want to collaborate with us or have any inquiries, feel free to reach out!</p>
+        <ul>
+            <li>Email: contact@rhinoxstudios.com</li>
+            <li>Phone: +1 (123) 456-7890</li>
+        </ul>
+    </section>
+   
+    <script>
+        const modal = document.getElementById("myModal");
+        const modalImg = document.getElementById("modal-img");
+        const modalDesc = document.getElementById("modal-desc");
+        let currentProject = 0;
+        let currentIndex = 0;
+
+        const projects = [
+            {
+                title: "Pitmonster",
+                images: ["RhinoxSite/Pitbull.png", "RhinoxSite/Pitbull_2.png", "RhinoxSite/Pitbull_3.png"],
+                description: "Project Pitmonster, a 3D printable sculpture with a high level of detail and 100% correct anatomy"
+            },
+            {
+                title: "Hades Bust",
+                images: ["RhinoxSite/Bust_Hades_Color.png", "RhinoxSite/Bust_Hades_NoColor.png"],
+                description: "Bust of Hades made in Blender for 3d printing."
+            },
+            {
+                title: "Saci Bust",
+                images: ["RhinoxSite/Three_Saci_Bust.png", "RhinoxSite/One_Bust_Saci.png", "RhinoxSite/Saci_Bust_NoColor.png"],
+                description: "A Brazilian folk legend, Saci Perere. Modeled in Blender for 3D printing."
+            },
+            {
+                title: "Character Stylized",
+                images: ["RhinoxSite/Stylized_3d_Character.png"],
+                description: "Stylized Character make for unreal"
+            },
+            {
+                title: "Project Title 5",
+                images: ["project5-photo1.jpg", "project5-photo2.jpg", "project5-photo3.jpg"],
+                description: "Description for Project Title 5."
+            },
+            {
+                title: "Project Title 6",
+                images: ["project6-photo1.jpg", "project6-photo2.jpg", "project6-photo3.jpg"],
+                description: "Description for Project Title 6."
+            },
+            {
+                title: "Project Title 7",
+                images: ["project6-photo1.jpg", "project6-photo2.jpg", "project6-photo3.jpg"],
+                description: "Description for Project Title 6."
+            },
+        ]
+
+        function openModal(projectIndex) {
+            currentProject = projectIndex - 1;
+            currentIndex = 0;
+            modal.style.display = "flex";
+            updateModalContent();
+        }
+
+        function closeModal() {
+            modal.style.display = "none";
+        }
+
+        function changePhoto(direction) {
+    if (projects[currentProject].images.length > 1) { // Only allow navigation if there is more than one photo
+        currentIndex += direction;
+        
+        // Wrap around the indices
+        if (currentIndex < 0) {
+            currentIndex = projects[currentProject].images.length - 1;
+        } else if (currentIndex >= projects[currentProject].images.length) {
+            currentIndex = 0;
+        }
+        updateModalContent();
+    }
+}
+
+function updateModalContent() {
+    modalImg.src = projects[currentProject].images[currentIndex];
+    modalDesc.textContent = projects[currentProject].description;
+}
+
+
+        // Prevent right-click to open images in a new tab
+        document.querySelectorAll('img').forEach(img => {
+            img.addEventListener('contextmenu', e => e.preventDefault());
+        });
+
+        // Prevent default click action on images
+        document.querySelectorAll('.portfolio-item img').forEach(img => {
+            img.addEventListener('click', e => e.preventDefault());
+        });
+    </script>
+</body>
+</html>
+
